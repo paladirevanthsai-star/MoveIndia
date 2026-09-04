@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Move India — Audio & Push Notification Live Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .pulse-glow { animation: pulse-ring 2s infinite; }
+    @keyframes slide-down {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .banner-enter { animation: slide-down 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col antialiased">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center text-slate-950 font-bold shadow-lg shadow-amber-500/20 text-lg">
+          <i class="fa-solid fa-bell animate-bounce"></i>
+        </div>
+        <div>
+          <h1 class="text-base font-black text-white flex items-center gap-2">
+            Move India <span class="text-emerald-400">Audio & Push Notification Demo</span>
+          </h1>
+          <p class="text-xs text-slate-400">Simulate Real-time Proximity Chimes, Emergency Alerts & Lock Screen Notifications</p>
+        </div>
+      </div>
+
+      <a href="http://localhost:3000" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl border border-slate-700 flex items-center gap-1.5 text-slate-300">
+        <i class="fa-solid fa-arrow-left"></i> Return to Live App
+      </a>
+    </div>
+  </header>
+
+  <!-- Simulated Phone Dynamic Banner (Appears on Trigger) -->
+  <div id="simulatedBanner" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-11/12 max-w-md hidden banner-enter">
+    <div class="bg-slate-900/95 border border-emerald-500/50 rounded-2xl p-4 shadow-2xl backdrop-blur-md flex items-start gap-3.5">
+      <div id="bannerIcon" class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/40 text-base">
+        <i class="fa-solid fa-bus"></i>
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center justify-between">
+          <span id="bannerTitle" class="text-xs font-black text-white">🚍 Bus Approaching</span>
+          <span class="text-[10px] text-slate-500 font-mono">Just Now</span>
+        </div>
+        <p id="bannerBody" class="text-[11px] text-slate-300 mt-0.5">TSRTC Bus 101-A arriving at Begumpet Stop in ~2 mins!</p>
+      </div>
+      <button onclick="dismissBanner()" class="text-slate-400 hover:text-white p-1">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
+  <main class="max-w-4xl mx-auto px-4 py-8 flex-1 space-y-8">
+    
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-900 border border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div class="space-y-2">
+          <span class="px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-xs font-bold uppercase tracking-wider">
+            Web Audio API • Native OS Push • 0 External Audio Files
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">
+            Experience Move India Alert Systems
+          </h2>
+          <p class="text-sm text-slate-300 max-w-lg leading-relaxed">
+            Click any alert below to hear the synthesized audio chime and see both native system notifications and smartphone banner previews.
+          </p>
+        </div>
+
+        <button id="enablePushBtn" onclick="enablePush()" class="px-4 py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-2xl shadow-lg shadow-emerald-500/30 flex items-center gap-2 transition-all shrink-0">
+          <i class="fa-solid fa-mobile-screen"></i>
+          <span>Enable Native OS Push</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Alert Trigger Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Card 1: Bus Approaching -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4 hover:border-emerald-500/50 transition-all flex flex-col justify-between">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <i class="fa-solid fa-bus text-lg"></i>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+              Harmonic Chime
+            </span>
+          </div>
+          <h3 class="text-base font-bold text-white">Bus Approaching Proximity Chime</h3>
+          <p class="text-xs text-slate-400">
+            Synthesized F#5 ➔ A#5 ➔ C#6 ascending chord. Automatically triggers when commuter's bus is ~2 minutes away from their boarding stop.
+          </p>
+        </div>
+
+        <button onclick="demoBusApproaching()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-emerald-600/20">
+          <i class="fa-solid fa-volume-high"></i> Play Bus Proximity Alert
+        </button>
+      </div>
+
+      <!-- Card 2: Police ANPR Hit-and-Run Alert -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4 hover:border-red-500/50 transition-all flex flex-col justify-between">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="p-2.5 rounded-xl bg-red-500/10 text-rose-400 border border-red-500/20">
+              <i class="fa-solid fa-shield-halved text-lg animate-pulse"></i>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-800">
+              Emergency Siren
+            </span>
+          </div>
+          <h3 class="text-base font-bold text-rose-300">Police ANPR Violation Siren</h3>
+          <p class="text-xs text-slate-400">
+            880Hz / 1175Hz dual-tone urgent police pulse. Dispatched when bus edge cameras detect hit-and-run, rash driving, or BRT lane encroachment.
+          </p>
+        </div>
+
+        <button onclick="demoPoliceAlert()" class="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-rose-600/20">
+          <i class="fa-solid fa-bullhorn"></i> Play Police Violation Siren
+        </button>
+      </div>
+
+      <!-- Card 3: Municipal PWD Road Defect Alert -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4 hover:border-amber-500/50 transition-all flex flex-col justify-between">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800">
+              Hazard Pulse
+            </span>
+          </div>
+          <h3 class="text-base font-bold text-amber-300">Municipal PWD Pothole Hazard</h3>
+          <p class="text-xs text-slate-400">
+            Low rumble vibration pulse (260Hz ➔ 140Hz). Triggers when bus front-road scanner logs a severe pothole (>10cm depth) requiring PWD road repair.
+          </p>
+        </div>
+
+        <button onclick="demoPotholeAlert()" class="w-full py-2.5 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-amber-600/20">
+          <i class="fa-solid fa-wrench"></i> Play PWD Defect Alert
+        </button>
+      </div>
+
+      <!-- Card 4: UPI Ticket Confirmation Chime -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4 hover:border-teal-500/50 transition-all flex flex-col justify-between">
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="p-2.5 rounded-xl bg-teal-500/10 text-teal-400 border border-teal-500/20">
+              <i class="fa-solid fa-qrcode text-lg"></i>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-teal-950 text-teal-300 border border-teal-800">
+              Success Chime
+            </span>
+          </div>
+          <h3 class="text-base font-bold text-teal-300">UPI Digital Pass Confirmation</h3>
+          <p class="text-xs text-slate-400">
+            Crisp two-tone C6 ➔ G6 positive chime. Accompanies dynamic QR digital transit pass creation following UPI checkout.
+          </p>
+        </div>
+
+        <button onclick="demoTicketSuccess()" class="w-full py-2.5 bg-teal-600 hover:bg-teal-500 text-slate-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-teal-600/20">
+          <i class="fa-solid fa-check-double"></i> Play Ticket Success Chime
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Technical Architecture Box -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 text-xs text-slate-300 space-y-3">
+      <span class="text-xs font-bold text-white uppercase tracking-wider block">
+        💡 Why Move India's Notification Architecture Wins in Smart India Hackathon:
+      </span>
+      <ul class="list-disc list-inside space-y-1.5 text-slate-400">
+        <li><strong>Zero Data Audio Synthesis:</strong> Chimes are computed in real time mathematically via the browser's audio DAC using sine/sawtooth oscillators. Zero `.mp3` downloads, zero latency, works 100% offline.</li>
+        <li><strong>Multi-Channel Dispatch:</strong> Combines audio alarms, smartphone haptic vibrations, system notifications, and in-app visual heads-up displays.</li>
+        <li><strong>Dual-User Persona:</strong> Commuters receive boarding proximity alerts; City Police & Municipal authorities receive real-time infrastructure and law enforcement emergency feeds.</li>
+      </ul>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
+    Move India • Real-time Bus GPS & SIH AI Sensing Notification Engine
+  </footer>
+
+  <script>
+    let bannerTimer = null;
+
+    function showBanner(title, body, iconClass, iconBgClass) {
+      const banner = document.getElementById("simulatedBanner");
+      const bTitle = document.getElementById("bannerTitle");
+      const bBody = document.getElementById("bannerBody");
+      const bIcon = document.getElementById("bannerIcon");
+
+      bTitle.innerText = title;
+      bBody.innerText = body;
+      bIcon.className = `w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border text-base ${iconBgClass}`;
+      bIcon.innerHTML = `<i class="${iconClass}"></i>`;
+
+      banner.classList.remove("hidden");
+      if (bannerTimer) clearTimeout(bannerTimer);
+      bannerTimer = setTimeout(() => {
+        banner.classList.add("hidden");
+      }, 5000);
+    }
+
+    function dismissBanner() {
+      document.getElementById("simulatedBanner").classList.add("hidden");
+    }
+
+    async function enablePush() {
+      if (!("Notification" in window)) {
+        alert("This browser does not support desktop push notifications.");
+        return;
+      }
+      const perm = await Notification.requestPermission();
+      if (perm === "granted") {
+        document.getElementById("enablePushBtn").innerHTML = '<i class="fa-solid fa-check"></i> <span>OS Push Active</span>';
+        document.getElementById("enablePushBtn").className = "px-4 py-3 bg-emerald-700 text-white font-black text-xs rounded-2xl flex items-center gap-2";
+      } else {
+        alert("Push notifications were denied.");
+      }
+    }
+
+    function triggerNativePush(title, body) {
+      if ("Notification" in window && Notification.permission === "granted") {
+        try {
+          new Notification(title, {
+            body: body,
+            icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z'/></svg>"
+          });
+        } catch(e) {}
+      }
+    }
+
+    function demoBusApproaching() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const notes = [739.99, 932.33, 1108.73];
+      const now = ctx.currentTime;
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now + idx * 0.18);
+        gain.gain.setValueAtTime(0, now + idx * 0.18);
+        gain.gain.linearRampToValueAtTime(0.35, now + idx * 0.18 + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.18 + 0.65);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.18);
+        osc.stop(now + idx * 0.18 + 0.7);
+      });
+
+      if ("vibrate" in navigator) navigator.vibrate([200, 100, 250, 100, 400]);
+
+      showBanner("🚍 Bus Approaching: TSRTC 101-A", "Arriving at Begumpet Stop in ~2 mins! Ready to board.", "fa-solid fa-bus", "bg-emerald-500/20 text-emerald-400 border-emerald-500/40");
+      triggerNativePush("🚍 Bus Approaching: TSRTC 101-A", "Arriving at Begumpet Stop in ~2 mins! Ready to board.");
+    }
+
+    function demoPoliceAlert() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const now = ctx.currentTime;
+      for (let i = 0; i < 4; i++) {
+        const freq = i % 2 === 0 ? 880 : 1174.66;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(freq, now + i * 0.14);
+        gain.gain.setValueAtTime(0.3, now + i * 0.14);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.14 + 0.13);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.14);
+        osc.stop(now + i * 0.14 + 0.14);
+      }
+
+      if ("vibrate" in navigator) navigator.vibrate([400, 100, 400, 100, 600]);
+
+      showBanner("🚨 POLICE ALERT: Hit-and-Run Detected!", "Plate TS 09 EA 3112 (97.4% OCR Confidence). Dispatched to Police Command.", "fa-solid fa-shield-halved", "bg-red-500/20 text-rose-400 border-red-500/40");
+      triggerNativePush("🚨 POLICE ALERT: Hit-and-Run Detected!", "Vehicle TS 09 EA 3112 near Begumpet Flyover. Dispatched to Police Command.");
+    }
+
+    function demoPotholeAlert() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(260, now);
+      osc.frequency.exponentialRampToValueAtTime(140, now + 0.4);
+      gain.gain.setValueAtTime(0.4, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.5);
+
+      if ("vibrate" in navigator) navigator.vibrate([300, 150, 300]);
+
+      showBanner("🕳️ ROAD DEFECT: 14cm Deep Pothole", "Verified by Bus 101 AI cam. Maintenance Work Order #WO-HYD-2024-001 created.", "fa-solid fa-triangle-exclamation", "bg-amber-500/20 text-amber-400 border-amber-500/40");
+      triggerNativePush("🕳️ ROAD DEFECT: 14cm Deep Pothole", "Verified by Bus 101 AI camera. Maintenance Work Order created.");
+    }
+
+    function demoTicketSuccess() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const now = ctx.currentTime;
+      [1046.50, 1567.98].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+        gain.gain.setValueAtTime(0.25, now + idx * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.5);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.12);
+        osc.stop(now + idx * 0.12 + 0.55);
+      });
+
+      if ("vibrate" in navigator) navigator.vibrate([150]);
+
+      showBanner("🎫 TICKET CONFIRMED: Move India Pass", "₹25 paid via Google Pay. Dynamic security QR pass activated.", "fa-solid fa-qrcode", "bg-teal-500/20 text-teal-300 border-teal-500/40");
+      triggerNativePush("🎫 TICKET CONFIRMED: Move India Pass", "₹25 paid via Google Pay. Dynamic security QR pass activated.");
+    }
+  </script>
+</body>
+</html>

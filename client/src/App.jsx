@@ -23,6 +23,7 @@ import GisDefectMap from "./components/sih/GisDefectMap";
 import AnprIncidentConsole from "./components/sih/AnprIncidentConsole";
 import MunicipalWorkOrders from "./components/sih/MunicipalWorkOrders";
 import ShareMobileModal from "./components/ShareMobileModal";
+import NotificationDemoModal from "./components/NotificationDemoModal";
 import { 
   playBusApproachingChime, 
   sendProximityNotification, 
@@ -77,6 +78,7 @@ function MainApp() {
   const [isSeatsModalOpen, setIsSeatsModalOpen] = useState(false);
   const [seatsBus, setSeatsBus] = useState(null);
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
 
   // Proximity Chime Alarms (Bus IDs)
   const [proximityAlarms, setProximityAlarms] = useState([]);
@@ -217,6 +219,7 @@ function MainApp() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenMobileModal={() => setIsMobileModalOpen(true)}
+        onOpenNotificationModal={() => setIsNotificationModalOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -451,6 +454,12 @@ function MainApp() {
       <ShareMobileModal
         isOpen={isMobileModalOpen}
         onClose={() => setIsMobileModalOpen(false)}
+      />
+
+      {/* Interactive Notification Demo Modal */}
+      <NotificationDemoModal
+        isOpen={isNotificationModalOpen}
+        onClose={() => setIsNotificationModalOpen(false)}
       />
 
       {/* Footer */}

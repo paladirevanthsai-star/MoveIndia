@@ -19,11 +19,12 @@ import {
   Camera,
   AlertTriangle,
   Building2,
-  Share2
+  Share2,
+  Bell
 } from "lucide-react";
 import { toast } from "sonner";
 
-export default function Navbar({ onOpenAuthModal, activeTab, setActiveTab, onOpenMobileModal }) {
+export default function Navbar({ onOpenAuthModal, activeTab, setActiveTab, onOpenMobileModal, onOpenNotificationModal }) {
   const { user, demoLogin, logout, verifyAdminPin, verifyOperatorPin } = useAuth();
   const { lang, changeLanguage, t } = useLanguage();
 
@@ -195,6 +196,17 @@ export default function Navbar({ onOpenAuthModal, activeTab, setActiveTab, onOpe
               <Smartphone className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Phone URL</span>
               <Share2 className="w-3 h-3 text-slate-400" />
+            </button>
+
+            {/* Notification Demo Button */}
+            <button
+              type="button"
+              onClick={onOpenNotificationModal}
+              title="Test Bus Audio Chimes & Emergency Notifications"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold transition-all cursor-pointer"
+            >
+              <Bell className="w-3.5 h-3.5 animate-bounce" />
+              <span className="hidden sm:inline">Alerts Demo</span>
             </button>
 
             {/* Regional Language Switcher */}
