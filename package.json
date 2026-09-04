@@ -8,5 +8,9 @@
     "build": "node build.js",
     "start": "node start.js",
     "dev": "node dev.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
   }
 }
