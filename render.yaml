@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: move-india
+    env: node
+    plan: free
+    buildCommand: node build.js
+    startCommand: node start.js
+    envVars:
+      - key: NODE_ENV
+        value: production

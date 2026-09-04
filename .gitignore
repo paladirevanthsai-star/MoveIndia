@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Production build output
+client/dist/
+dist/
+
+# Environment variables & local files
+.env
+.env.local
+*.log
+npm-debug.log*
+
+# Binaries
+cloudflared.exe
+active_tunnel.txt
+
+# Editor & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
