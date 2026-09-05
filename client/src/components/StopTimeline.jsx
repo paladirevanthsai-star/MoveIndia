@@ -5,8 +5,8 @@ export default function StopTimeline({ stops = [], activeRoute, buses = [], sele
   if (!stops || stops.length === 0) return null;
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 shadow-xl">
-      <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-800">
+    <div className="bg-slate-950/50 border border-slate-800/60 rounded-xl p-3 shadow-inner">
+      <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-800/60">
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-emerald-400" />
           <h3 className="text-sm font-bold text-white uppercase tracking-wider">

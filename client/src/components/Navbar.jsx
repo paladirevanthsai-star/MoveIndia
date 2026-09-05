@@ -89,14 +89,14 @@ export default function Navbar({ onOpenAuthModal, activeTab, setActiveTab, onOpe
           </div>
 
           {/* Center Navigation Tabs: SIH Modes */}
-          <nav className="hidden lg:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+          <nav className="hidden lg:flex items-center gap-1.5 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800/80 backdrop-blur-md shadow-lg">
             
             {/* 1. Transit & Fleet */}
             <button
               onClick={() => setActiveTab("live-map")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 activeTab === "live-map"
-                  ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20"
+                  ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 font-black"
                   : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
@@ -107,9 +107,9 @@ export default function Navbar({ onOpenAuthModal, activeTab, setActiveTab, onOpe
             {/* 2. Onboard Edge-AI Vision (SIH Core) */}
             <button
               onClick={() => setActiveTab("edge-vision")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 activeTab === "edge-vision"
-                  ? "bg-indigo-500 text-white shadow-md shadow-indigo-500/20"
+                  ? "bg-indigo-500 text-white shadow-md shadow-indigo-500/20 font-black"
                   : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
@@ -120,49 +120,52 @@ export default function Navbar({ onOpenAuthModal, activeTab, setActiveTab, onOpe
             {/* 3. GIS Defect Map (SIH Core) */}
             <button
               onClick={() => setActiveTab("defect-map")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 activeTab === "defect-map"
-                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/20"
+                  ? "bg-rose-600 text-white shadow-md shadow-rose-600/20 font-black"
                   : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
-              <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
-              <span>GIS Defect Map</span>
+              <AlertTriangle className="w-3.5 h-3.5 text-rose-300" />
+              <span>GIS Defects</span>
             </button>
 
             {/* 4. Police & ANPR (SIH Core) */}
             <button
               onClick={() => setActiveTab("police-anpr")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 activeTab === "police-anpr"
-                  ? "bg-red-600 text-white shadow-md shadow-red-600/20"
+                  ? "bg-red-600 text-white shadow-md shadow-red-600/20 font-black"
                   : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
-              <ShieldAlert className="w-3.5 h-3.5 text-red-400" />
+              <ShieldAlert className="w-3.5 h-3.5 text-red-300" />
               <span>Police & ANPR</span>
             </button>
 
             {/* 5. Municipal PWD (SIH Core) */}
             <button
               onClick={() => setActiveTab("municipal-pwd")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 activeTab === "municipal-pwd"
-                  ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
+                  ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-black"
                   : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
-              <Building2 className="w-3.5 h-3.5 text-amber-900" />
+              <Building2 className="w-3.5 h-3.5 text-amber-950" />
               <span>Municipal PWD</span>
             </button>
+
+            {/* Subtle Divider */}
+            <div className="w-[1px] h-4 bg-slate-800 mx-1"></div>
 
             {/* Operator Deck */}
             <button
               onClick={handleOperatorSwitch}
-              className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
                 activeTab === "operator"
-                  ? "bg-slate-800 text-amber-400 border border-amber-600"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-slate-800 text-amber-400 border border-amber-600/80 font-bold"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/50"
               }`}
             >
               <Wrench className="w-3 h-3 text-amber-400" />
@@ -172,10 +175,10 @@ export default function Navbar({ onOpenAuthModal, activeTab, setActiveTab, onOpe
             {/* Admin */}
             <button
               onClick={handleAdminSwitch}
-              className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
                 activeTab === "admin"
-                  ? "bg-slate-800 text-indigo-400 border border-indigo-600"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-slate-800 text-indigo-400 border border-indigo-600/80 font-bold"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/50"
               }`}
             >
               <ShieldCheck className="w-3 h-3 text-indigo-400" />

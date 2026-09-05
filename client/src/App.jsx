@@ -4,10 +4,9 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { LanguageProvider, useLanguage } from "./context/LanguageContext";
 import Navbar from "./components/Navbar";
 import LiveMap from "./components/LiveMap";
-import RouteSelector from "./components/RouteSelector";
 import BusCards from "./components/BusCards";
-import StopTimeline from "./components/StopTimeline";
-import PredictionCard from "./components/PredictionCard";
+import UnifiedTransitHeader from "./components/UnifiedTransitHeader";
+import SidebarInsights from "./components/SidebarInsights";
 import ReportModal from "./components/ReportModal";
 import OperatorDashboard from "./components/OperatorDashboard";
 import AdminHub from "./components/AdminHub";
@@ -229,101 +228,30 @@ function MainApp() {
         {activeTab === "live-map" && (
           <div className="space-y-6">
             
-            {/* 1. Quick Access: Pinned Favorite Commute Fleet */}
-            <FavoritesBar
-              favorites={favorites}
-              buses={buses}
-              routes={routes}
-              selectedBus={selectedBus}
-              onSelectBus={(bus) => {
-                setSelectedBus(bus);
-                toast.success(`Tracking Favorite Bus ${bus.busNumber}`);
-              }}
-              onSelectRoute={handleSelectRoute}
-              onToggleFavorite={handleToggleFavorite}
-            />
-
-            {/* 2. Instant Omni Bus & Route Search Engine */}
-            <SearchBar
-              buses={buses}
+            {/* 1. Sleek Floating Unified Transit Command Header */}
+            <UnifiedTransitHeader
               routes={routes}
               activeRoute={activeRoute}
+              onSelectRoute={handleSelectRoute}
+              buses={buses}
+              selectedBus={selectedBus}
               onSelectBus={(bus) => {
                 setSelectedBus(bus);
                 toast.success(`Selected Bus ${bus.busNumber} (${bus.speedKmph || 25} km/h)`);
               }}
-              onSelectRoute={handleSelectRoute}
               favorites={favorites}
               onToggleFavorite={handleToggleFavorite}
+              onOpenTicketModal={() => {
+                setTicketBus(selectedBus);
+                setIsTicketModalOpen(true);
+              }}
+              onOpenReportModal={() => handleOpenReportModal()}
+              t={t}
             />
 
-            {/* 3. Indian City Route Switcher */}
-            <RouteSelector
-              routes={routes}
-              activeRoute={activeRoute}
-              onSelectRoute={handleSelectRoute}
-            />
-
-            {/* 4. Quick Live Route Header & Actions */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900/80 border border-slate-800/80 rounded-2xl p-4 shadow-lg backdrop-blur-sm">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-                  <Activity className="w-5 h-5 animate-pulse" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-extrabold text-white text-base">
-                      {activeRoute?.routeName || "Select Route"}
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 font-bold border border-emerald-800">
-                      {activeRoute?.city}
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    {activeRoute?.stopsCount || 0} stops • Approx ₹{activeRoute?.fare || 30} fare • Real-Road GPS Active
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {/* 1-Click Buy Digital Ticket */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTicketBus(selectedBus);
-                    setIsTicketModalOpen(true);
-                  }}
-                  className="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition-all cursor-pointer"
-                >
-                  <QrCode className="w-4 h-4" />
-                  <span>{t("digital_ticket")}</span>
-                </button>
-
-                {/* Report Delay / Crowding */}
-                <button
-                  data-testid="report-crowding-button"
-                  onClick={() => handleOpenReportModal()}
-                  className="flex items-center gap-2 px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition-all cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{t("report_action")}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* 5. Green Transit Eco & Money Savings Meter */}
-            {activeRoute && (
-              <EcoImpactCard activeRoute={activeRoute} />
-            )}
-
-            {/* 6. AI Congestion Prediction Card */}
-            {activeRoute && (
-              <PredictionCard routeId={activeRoute.id} />
-            )}
-
-            {/* Two Column Grid: Left Real-Road Map (2 spans), Right Timeline (1 span) */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Live Interactive Leaflet Map with Google Maps & Monsoon Alerts */}
+            {/* 2. Hero Interactive Map & Tabbed Corridor Insights Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+              {/* Live Interactive Leaflet Real-Road Map (2 spans) */}
               <div className="lg:col-span-2">
                 <LiveMap
                   buses={buses}
@@ -334,13 +262,26 @@ function MainApp() {
                 />
               </div>
 
-              {/* Stops & Live Route Sequence Column (1 span) */}
-              <div className="space-y-6">
-                <StopTimeline
+              {/* Tabbed Corridor Insights Sidebar: Stops Sequence, AI & Eco Predictions, Saved Fleet (1 span) */}
+              <div className="lg:col-span-1">
+                <SidebarInsights
                   stops={stops}
                   activeRoute={activeRoute}
                   buses={buses}
                   selectedBus={selectedBus}
+                  onSelectBus={(bus) => setSelectedBus(bus)}
+                  favorites={favorites}
+                  onToggleFavorite={handleToggleFavorite}
+                  proximityAlarms={proximityAlarms}
+                  onToggleProximityAlarm={handleToggleProximityAlarm}
+                  onOpenSeatsModal={(bus) => {
+                    setSeatsBus(bus);
+                    setIsSeatsModalOpen(true);
+                  }}
+                  onOpenTicketModal={(bus) => {
+                    setTicketBus(bus);
+                    setIsTicketModalOpen(true);
+                  }}
                 />
               </div>
             </div>
